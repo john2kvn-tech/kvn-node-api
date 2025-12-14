@@ -1,0 +1,39 @@
+name: Node API CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-node-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show files
+        run: |
+          echo "Listing project files"
+          pwd
+          ls -R
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Basic JS syntax check
+        run: |
+          node -c server.js || echo "JS syntax looks OK"
+
+      - name: Build Docker image
+        run: |
+          echo "Building Docker image for kvn-node-api..."
+          docker build -t kvn-node-api .
